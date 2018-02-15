@@ -6,8 +6,6 @@
 //  Copyright © 2016 Guizion Labs. All rights reserved.
 //
 
-import Foundation
-
 public enum ParametersType {
     case query
     case path

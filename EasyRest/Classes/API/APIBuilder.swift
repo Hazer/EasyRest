@@ -7,15 +7,14 @@
 //
 
 import Foundation
-import Genome
 import Alamofire
 
-open class APIBuilder <T> where T: NodeInitializable {
+open class APIBuilder <T> where T: Decodable {
     
     var path: String
     var queryParams: [String: String]?
     var pathParams: [String: String]?
-    var bodyParams: [String: Any]?
+    var bodyParams: Body?
     var headers: [String: String]?
     var method: HTTPMethod?
     
@@ -106,20 +105,20 @@ open class APIBuilder <T> where T: NodeInitializable {
         }
     }
     
-    open func addBodyParameters(bodyParam: MappableBase) throws -> Self {
-        bodyParams = try bodyParam.foundationDictionary()
+    open func addBodyParameters<T: Encodable>(bodyParam: T) throws -> Self {
+        bodyParams = .codable(bodyParam)
         return self
     }
     
     open func addBodyParameters(_ bodyParams : [String: Any]) ->  Self {
-        if self.bodyParams == nil{
-            self.bodyParams = bodyParams
+        if self.bodyParams == nil {
+            self.bodyParams = .params(bodyParams)
             return self
         }
         
-        for (key, value) in bodyParams {
-            self.bodyParams![key] = value
-        }
+//        for (key, value) in bodyParams {
+//            self.bodyParams![key] = value
+//        }
         return self
     }
     
@@ -146,7 +145,7 @@ open class APIBuilder <T> where T: NodeInitializable {
     open func convertParameters(_ obj: Any) throws -> [String: Any]{
         if let _obj = obj as? [String: AnyObject] {
             return _obj
-        } else if let _obj = obj as? MappableBase {
+        } else if let _obj = obj as? Encodable {
             return try! _obj.foundationDictionary()!
         }
         throw RestError(rawValue: RestErrorType.invalidType.rawValue)
