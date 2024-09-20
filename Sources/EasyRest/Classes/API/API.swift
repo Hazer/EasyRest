@@ -44,7 +44,7 @@ open class API <T> where T: Codable {
         headers: [String: String]?, 
         interceptors: [Interceptor]?,
         cancelToken: CancelationToken<T>?,
-        requestTimeOut: Int? = 30
+        requestTimeOut: TimeInterval = 30
     ) {
         
         self.path = try! URLRequest(url: path, method: method)

@@ -20,7 +20,7 @@ open class APIBuilder <T> where T: Codable {
     var cancelToken: CancelationToken<T>?
     var logger: Loggable?
 
-    var requestTimeOut: Int = 30
+    var requestTimeOut: TimeInterval = 30
     
     var interceptors: [Interceptor] = []
     
@@ -65,8 +65,8 @@ open class APIBuilder <T> where T: Codable {
         return self
     }
 
-    open func requestTimeOut(_ seconds: Int) -> Self {
-        self.requestTimeOut = seconds
+    open func requestTimeOut(_ timeOut: TimeInterval) -> Self {
+        self.requestTimeOut = timeOut
         return self
     }
     

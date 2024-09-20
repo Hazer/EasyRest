@@ -28,7 +28,7 @@ open class Service<R> where R: Routable {
         }
     }
 
-    open var requestTimeOut: Int {
+    open var requestTimeOut: TimeInterval {
         return 30
     }
     
