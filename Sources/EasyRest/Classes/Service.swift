@@ -27,12 +27,17 @@ open class Service<R> where R: Routable {
             fatalError("Override to provide baseUrl")
         }
     }
+
+    open var requestTimeOut: Int {
+        return 30
+    }
     
     open func builder<T: Codable>(_ routes: R,
                                   type: T.Type) throws -> APIBuilder<T> {
         let builder = try routes.builder(base, type: type)
         builder.logger = self.loggerClass.init()
         builder.logger?.logLevel = self.loggerLevel
+        builder.requestTimeOut = self.requestTimeOut
         if (interceptors != nil) {
             _ = builder.addInterceptors(interceptors!)
         }
