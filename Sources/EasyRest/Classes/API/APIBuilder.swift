@@ -19,6 +19,8 @@ open class APIBuilder <T> where T: Codable {
     var method: HTTPMethod?
     var cancelToken: CancelationToken<T>?
     var logger: Loggable?
+
+    var requestTimeOut: Int = 30
     
     var interceptors: [Interceptor] = []
     
@@ -60,6 +62,11 @@ open class APIBuilder <T> where T: Codable {
     
     open func logger(_ logger: Logger) -> Self {
         self.logger = logger
+        return self
+    }
+
+    open func requestTimeOut(_ seconds: Int) -> Self {
+        self.requestTimeOut = seconds
         return self
     }
     
@@ -141,7 +148,16 @@ open class APIBuilder <T> where T: Codable {
             self.interceptors.insert(interceptorType.init(), at: 0)
         }
         
-        let api = API<T>(path: path!, method: self.method!, queryParams: queryParams, bodyParams: bodyParams, headers: headers, interceptors: self.interceptors, cancelToken: cancelToken)
+        let api = API<T>(
+            path: path!,
+            method: self.method!, 
+            queryParams: queryParams,
+            bodyParams: bodyParams,
+            headers: headers, 
+            interceptors: self.interceptors,
+            cancelToken: cancelToken,
+            requestTimeOut: self.requestTimeOut
+        )
         api.logger = self.logger
         return api
     }
