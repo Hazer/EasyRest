@@ -36,7 +36,16 @@ open class API <T> where T: Codable {
         NSURLErrorNotConnectedToInternet
         ])
     
-    public init(path: URL, method: HTTPMethod, queryParams: [String: String]?, bodyParams: [String: Any]?, headers: [String: String]?, interceptors: [Interceptor]?, cancelToken: CancelationToken<T>?) {
+    public init(
+        path: URL,
+        method: HTTPMethod,
+        queryParams: [String: String]?,
+        bodyParams: [String: Any]?,
+        headers: [String: String]?, 
+        interceptors: [Interceptor]?,
+        cancelToken: CancelationToken<T>?,
+        requestTimeOut: Int? = 30
+    ) {
         
         self.path = try! URLRequest(url: path, method: method)
         
@@ -50,7 +59,7 @@ open class API <T> where T: Codable {
         }
         
         let configuration = URLSessionConfiguration.default
-        configuration.timeoutIntervalForRequest = 30
+        configuration.timeoutIntervalForRequest = requestTimeOut
         manager = Alamofire.SessionManager(configuration: configuration)
         
         if interceptors != nil {self.interceptors.append(contentsOf: interceptors!)}
